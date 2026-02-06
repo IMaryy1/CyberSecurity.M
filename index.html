@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cyber Security Club Demo</title>
+<style>
+body {
+ margin: 0;
+ font-family: 'Courier New', monospace;
+ background: black;
+ color: #00ff9f;
+ text-align: center;
+ overflow-x: hidden;
+}
+canvas {
+ position: fixed;
+ top: 0;
+ left: 0;
+ z-index: -1;
+}
+h1 {
+ margin-top: 20px;
+ text-shadow: 0 0 10px #00ff9f;
+}
+.logo {
+ width: 110px;
+ margin-top: 15px;
+}
+.box {
+ background: rgba(0, 255, 159, 0.07);
+ border: 1px solid #00ff9f33;
+ box-shadow: 0 0 15px #00ff9f22;
+ margin: 20px auto;
+ padding: 20px;
+ border-radius: 12px;
+ width: 85%;
+ max-width: 650px;
+}
+h2 {
+ color: #00ffcc;
+}
+input {
+ padding: 10px;
+ width: 70%;
+ border-radius: 6px;
+ border: none;
+ margin-top: 10px;
+ background: #0a0f1c;
+ color: #00ff9f;
+ border: 1px solid #00ff9f55;
+}
+.strength {
+ height: 10px;
+ border-radius: 5px;
+ margin-top: 10px;
+ transition: 0.3s;
+}
+.footer {
+ margin: 30px 0;
+ font-size: 14px;
+ color: #00ffaa88;
+}
+</style>
+</head>
+<body>
+<canvas id="matrix"></canvas>
+<img src="logo.png" class="logo" alt="Club Logo">
+<h1>CYBER SECURITY CLUB</h1>
+<p>Live Cyber Awareness Demo</p>
+<div class="box">
+<h2>👁️ How the Internet Sees You</h2>
+<p><b>Browser:</b> <span id="browser"></span></p>
+<p><b>Operating System:</b> <span id="os"></span></p>
+<p><b>Language:</b> <span id="lang"></span></p>
+<p><b>Screen Resolution:</b> <span id="screen"></span></p>
+<p><b>Cookies Enabled:</b> <span id="cookies"></span></p>
+</div>
+<div class="box">
+<h2>🔐 Test Your Password Strength</h2>
+<input type="text" id="password" placeholder="Type a sample password">
+<div class="strength" id="bar"></div>
+<p id="result"></p>
+</div>
+<div class="footer">
+ © Cyber Security Club – Awareness Project
+</div>
+<script>
+// ===== Matrix Background =====
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+const letters = "01";
+const fontSize = 14;
+const columns = canvas.width / fontSize;
+const drops = Array(Math.floor(columns)).fill(1);
+function drawMatrix() {
+ ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+ ctx.fillRect(0, 0, canvas.width, canvas.height);
+ ctx.fillStyle = "#00ff9f";
+ ctx.font = fontSize + "px monospace";
+ for (let i = 0; i < drops.length; i++) {
+   const text = letters[Math.floor(Math.random() * letters.length)];
+   ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+   if (drops[i] * fontSize > canvas.height && Math.random() > 0.975)
+     drops[i] = 0;
+   drops[i]++;
+ }
+}
+setInterval(drawMatrix, 33);
+// ===== Device Info =====
+document.getElementById("browser").innerText = navigator.userAgent;
+document.getElementById("os").innerText = navigator.platform;
+document.getElementById("lang").innerText = navigator.language;
+document.getElementById("screen").innerText = screen.width + " x " + screen.height;
+document.getElementById("cookies").innerText = navigator.cookieEnabled ? "Yes" : "No";
+// ===== Password Strength =====
+const pwd = document.getElementById("password");
+const bar = document.getElementById("bar");
+const result = document.getElementById("result");
+pwd.addEventListener("input", () => {
+ let val = pwd.value;
+ let strength = 0;
+ if (val.length > 5) strength++;
+ if (val.match(/[A-Z]/)) strength++;
+ if (val.match(/[0-9]/)) strength++;
+ if (val.match(/[^A-Za-z0-9]/)) strength++;
+ if (strength <= 1) {
+   bar.style.width = "30%"; bar.style.background="red";
+   result.innerText = "Weak – Easy to hack";
+ } else if (strength == 2) {
+   bar.style.width = "60%"; bar.style.background="orange";
+   result.innerText = "Medium – Could be safer";
+ } else {
+   bar.style.width = "100%"; bar.style.background="#00ff9f";
+   result.innerText = "Strong – Harder to crack";
+ }
+});
+</script>
+</body>
+</html>
